@@ -11,7 +11,7 @@ class GetDistrictForm(forms.Form):
 
 class GetBoxForm(forms.Form):
     district = forms.CharField(widget=forms.widgets.HiddenInput)
-    box_number = forms.IntegerField(required=True)
+    box_number = forms.IntegerField(required=True, label="Sandık Numarası", help_text="Sandık numarası 5 haneli rakamlardan oluşur.")
 
 class CreateBoxForm(forms.ModelForm):
     class Meta:
