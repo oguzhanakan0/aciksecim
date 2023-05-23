@@ -1,0 +1,20 @@
+{% extends 'election/base.html' %}
+{% load bootstrap5 %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col d-flex flex-column p-2">
+                <div class="p-2 text-center">
+                    <form action={% url 'search-box' city district %} method="post">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        <input type="submit" class="btn btn-primary" value="Sandik bul">
+                    </form>
+                </div>
+                <div class="p-2 text-center"><h2>Seçim 2023</h2></div>
+                <a href="sandik-listesi">Bu ilcedeki tum sandiklari goster</a>
+                <a href="tutanak-listesi">Bu ilcedeki tum tutanaklari goster</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

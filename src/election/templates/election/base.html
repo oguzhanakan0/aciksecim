@@ -1,0 +1,12 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+{% block head %}{% include 'election/head.html' %}{% endblock %}
+<body>
+    {% include 'election/navbar.html' %}
+    {% block body %}{% endblock %}
+</body>
+{% block foot %}{% endblock %}
+{% block scripts %}{% include 'election/scripts.html' %}{% endblock %}
+{% block extrascripts %}{% endblock %}
+</html>

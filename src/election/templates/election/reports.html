@@ -1,0 +1,6 @@
+{% extends 'election/base.html' %}
+{% load render_table from django_tables2 %}
+{% block body %}
+    <p>{{ city }} {{ district }} Tutanaklari</p>
+    {% render_table report_table %}
+{% endblock %}

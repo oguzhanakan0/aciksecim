@@ -1,0 +1,14 @@
+{% extends 'election/base.html' %}
+{% block body %}
+    {{ city_form }}
+    {{ district_form }}
+    {{ box_form }}
+    {{ vote_report_form }}
+    <a href={{ vote_report_form.instance.file.url }}>Tutanagi gor</a>
+    <form action="/actions/verify-vote-report/" method="post">
+        {% csrf_token %}
+        {% comment %} <input name="report_id" type="number" value={{ vote_report_form.instance.pk }} hidden> {% endcomment %}
+        {{ verify_vote_report_form }}
+        <input type="submit" value="Gonder">
+    </form>
+{% endblock %}

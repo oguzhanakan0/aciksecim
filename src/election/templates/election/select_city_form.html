@@ -1,0 +1,8 @@
+{% extends 'election/base.html' %}
+{% block body %}
+    <form action="/sandik/" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Onayla">
+    </form>
+{% endblock %}

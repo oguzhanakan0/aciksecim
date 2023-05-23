@@ -1,0 +1,11 @@
+{% extends 'election/base.html' %}
+{% load static %}
+{% block body %}
+<body>
+    {{ form.errors }}
+    <p>Redirecting to previous page in a few seconds...</p>
+</body>
+{% endblock %}
+{% block extrascripts %}
+<script src="{% static 'election/422.js' %}"></script>
+{% endblock %}
