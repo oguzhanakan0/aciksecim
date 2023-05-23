@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-q2h=oz)g+*e!pkwmz0hz^t%_ftrfzo+^(m9_x9r=tk%20qui3m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_tables2',
     'bootstrap5',
+    'captcha',
     'election',
 ]
 
@@ -125,3 +126,13 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+USE_TZ = True
+TIME_ZONE = 'Europe/Istanbul'
+
+DJANGO_TABLES2_TABLE_ATTRS = {
+    'class': 'table table-striped w-100',
+    'thead': {
+        'class': 'table-light',
+    },
+}

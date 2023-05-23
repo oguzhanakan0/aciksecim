@@ -1,20 +1,28 @@
 {% extends 'election/base.html' %}
 {% load bootstrap5 %}
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col d-flex flex-column p-2">
-                <div class="p-2 text-center">
-                    <form action={% url 'search-box' city district %} method="post">
-                        {% csrf_token %}
-                        {% bootstrap_form form %}
-                        <input type="submit" class="btn btn-primary" value="Sandik bul">
-                    </form>
+<div class="container">
+    <div class="row">
+        <div class="col d-flex flex-column p-2 align-items-center">
+            <div class="p-2 text-center">
+                <div class="card" style="min-width:18rem;max-width:100%">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ city.name }} - {{ district.name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Lütfen aşağıdaki seçeneklerden birini seçin.</h6>
+                        <div class="p-2"><a href="sandik-listesi" role="button" class="btn btn-primary">Tüm Sandıklar</a></div>
+                        <div class="p-2"><a href="tutanak-listesi" role="button" class="btn btn-primary">Tüm Tutanaklar</a></div>
+                        <strong>veya</strong>
+                        <form action={% url 'search-box' city.slug district.slug %} method="post">
+                            {% csrf_token %}
+                            {% bootstrap_form form %}
+                            <input type="submit" class="btn btn-primary" value="Sandık bul">
+                        </form>
+                        <br>
+                        <a href="javascript:history.back()" class="card-link">Geri dön</a>
+                    </div>
                 </div>
-                <div class="p-2 text-center"><h2>Seçim 2023</h2></div>
-                <a href="sandik-listesi">Bu ilcedeki tum sandiklari goster</a>
-                <a href="tutanak-listesi">Bu ilcedeki tum tutanaklari goster</a>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

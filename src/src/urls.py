@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from election.views import (
     index, 
     get_city, 
@@ -27,10 +27,16 @@ from election.views import (
     create_vote_report,
     get_vote_report,
     verify_vote_report,
+    get_sss,
+    get_stats,
+    get_all_reports_json,
 )
 
 urlpatterns = [
     path('', index),
+    path('sss/', get_sss),
+    path('istatistik/', get_stats),
+    path('istatistik/tum-tutanaklar/', get_all_reports_json, name="get-all-reports-json"),
     path('sandik/', get_city),
     path('sandik/<str:city>/', get_district, name='get-district'),
     path('sandik/<str:city>/<str:district>/', search_box, name='search-box'),
@@ -40,5 +46,6 @@ urlpatterns = [
     path('tutanak/<str:pk>/', get_vote_report),
     path('actions/create-vote-report/', create_vote_report, name='create-vote-report'),
     path('actions/verify-vote-report/', verify_vote_report, name='verify-vote-report'),
+    path('captcha/', include('captcha.urls')),
     path('admin/', admin.site.urls),
 ]

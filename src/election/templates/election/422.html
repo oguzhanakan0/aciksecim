@@ -1,10 +1,36 @@
 {% extends 'election/base.html' %}
 {% load static %}
 {% block body %}
-<body>
-    {{ form.errors }}
-    <p>Redirecting to previous page in a few seconds...</p>
-</body>
+<div class="container">
+    <div class="row">
+        <div class="col d-flex flex-column p-2 align-items-center">
+            <div class="p-2 text-center">
+                <div class="card" style="min-width:18rem;max-width:100%">
+                    <div class="card-body">
+                        <h5 class="card-title">Hata Oluştu (422)</h5>
+
+                        <div class="p-2 text-center" style="min-width:18rem;max-width:32rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                                <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                                </symbol>
+                            </svg>
+                            <div class="alert alert-primary d-flex align-items-center mb-0" role="alert">
+                                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+                                <div>{{ form.errors }}</div>
+                            </div>
+                        </div>
+
+                        <p>Birkaç saniye içerisinde önceki sayfaya yönlendirileceksiniz...</p>
+                        <br>
+                        <a href="javascript:history.back()" class="card-link">Geri dön</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
 {% endblock %}
 {% block extrascripts %}
 <script src="{% static 'election/422.js' %}"></script>

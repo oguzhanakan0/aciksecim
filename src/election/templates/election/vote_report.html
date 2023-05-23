@@ -1,14 +1,34 @@
 {% extends 'election/base.html' %}
+{% load bootstrap5 %}
 {% block body %}
-    {{ city_form }}
-    {{ district_form }}
-    {{ box_form }}
-    {{ vote_report_form }}
-    <a href={{ vote_report_form.instance.file.url }}>Tutanagi gor</a>
-    <form action="/actions/verify-vote-report/" method="post">
-        {% csrf_token %}
-        {% comment %} <input name="report_id" type="number" value={{ vote_report_form.instance.pk }} hidden> {% endcomment %}
-        {{ verify_vote_report_form }}
-        <input type="submit" value="Gonder">
-    </form>
+<div class="container">
+    <div class="row">
+        <div class="col d-flex flex-column p-2 align-items-center">
+            <div class="p-2 text-center" style="min-width:18rem;max-width:100%">
+                <h5>
+                    <a href="/sandik/{{ report.box.district.city.slug }}">{{ report.box.district.city.name }}</a> - 
+                    <a href="/sandik/{{ report.box.district.city.slug }}/{{ report.box.district.slug }}">{{ report.box.district.name }}</a> -
+                    <a href="/sandik/{{ report.box.district.city.slug }}/{{ report.box.district.slug }}/{{ report.box.number }}">Sandık No: {{ report.box.number }}</a>
+                </h5>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-lg-4 d-flex flex-column p-2">
+            <h6>Tutanak Özeti</h6>
+            {% bootstrap_form vote_report_form %}
+        </div>
+        <div class="col-xs-12 col-lg-8 d-flex flex-column p-2">
+            <h6>Tutanak Kontrolü</h6>
+            <a href={{ vote_report_form.instance.file.url }} role="button" class="btn btn-primary">Tutanağı göster</a>
+            <br>
+            <form action="/actions/verify-vote-report/" method="post">
+                {% csrf_token %}
+                {% comment %} <input name="report_id" type="number" value={{ vote_report_form.instance.pk }} hidden> {% endcomment %}
+                {% bootstrap_form verify_vote_report_form %}
+                <input type="submit" class="btn btn-success" value="Kontrolü Tamamla">
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,9 @@
+.table-container {
+    width: 100%;
+    max-width: 720px;
+    overflow-y: scroll;
+}
+
+.captcha {
+    cursor: pointer;
+}

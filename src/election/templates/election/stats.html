@@ -1,0 +1,29 @@
+{% extends 'election/base.html' %}
+{% load render_table from django_tables2 %}
+{% load bootstrap5 %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col d-flex flex-column p-4 align-items-center">
+            <div class="col-12 p-2 text-center card" style="min-width:18rem;max-width:720px;">
+                <div class="card-body">
+                    <h5 class="card-title">İstatistikler</h5>
+                    {% render_table table %}
+                    <br>
+                    <div class="card">
+                        <div class="card-body">
+                            <form action={% url 'get-all-reports-json' %} method="post">
+                                {% csrf_token %}
+                                {% bootstrap_form form %}
+                                <input type="submit" class="btn btn-primary" value="Tüm Tutanakları İndir (JSON)">
+                            </form>
+                        </div>
+                    </div>
+                    <br>
+                    <a href="javascript:history.back()" class="card-link">Geri dön</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

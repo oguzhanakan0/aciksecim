@@ -1,18 +1,14 @@
-function runAjaxQuery(url_,data_,return_to_) {
-    $.ajax({
-        url: url_,
-        data: data_,
-        success: function (data) {
-            console.log('query success')
-            $(return_to_).html(data);
-        }
-    });
-}
-
 $(document).ready(function() {
     $("#add-report-btn").click(function(){
         $("#add-report-form").removeClass("d-none");
         $(this).addClass("d-none");
+    });
+    
+    $('.captcha').click(function () {
+        $.getJSON("/captcha/refresh/", function (result) {
+            $('.captcha').attr('src', result['image_url']);
+            $('#id_captcha_0').val(result['key'])
+        });
     });
     
     // $("#add-report-btn").click(function(){

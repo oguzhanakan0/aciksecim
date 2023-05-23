@@ -24,6 +24,17 @@ class City(models.Model):
     id = models.IntegerField(unique=True)
     slug = models.SlugField(max_length=40, primary_key=True)
     name = models.CharField(max_length=40, unique=True)
+    n_box = models.IntegerField()
+    n_voter = models.IntegerField()
+
+    def n_boxes(self):
+        return Box.objects.filter(district__city=self).count() # type: ignore
+    
+    def n_report(self):
+        return VoteReport.objects.filter(box__district__city=self).count() # type: ignore
+    
+    def n_report_verification(self):
+        return VoteReportVerification.objects.filter(report__box__district__city=self).count() # type: ignore
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -35,7 +46,7 @@ class City(models.Model):
 class District(models.Model):
     slug = models.SlugField(max_length=40)
     name = models.CharField(max_length=40)
-    city = models.ForeignKey(City, on_delete=models.PROTECT, related_name="districts")
+    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name="districts")
     n_box = models.IntegerField()
     n_voter = models.IntegerField()
 
@@ -48,7 +59,7 @@ class District(models.Model):
 
 class Box(models.Model):
     number = models.IntegerField()
-    district = models.ForeignKey(District, on_delete=models.PROTECT, related_name="boxes")
+    district = models.ForeignKey(District, on_delete=models.CASCADE, related_name="boxes")
 
     def get_absolute_url(self):
         return f"/sandik/{self.district.city.slug}/{self.district.slug}/{self.number}/"
@@ -62,7 +73,7 @@ class Box(models.Model):
 
 class VoteReport(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid1, editable=False)
-    box = models.ForeignKey(Box, on_delete=models.PROTECT, related_name="reports")
+    box = models.ForeignKey(Box, on_delete=models.CASCADE, related_name="reports")
     version = models.IntegerField(default=1)
     n_valid = models.IntegerField() 
     n_invalid = models.IntegerField()
@@ -105,7 +116,7 @@ class VoteReport(models.Model):
 
 class VoteReportVerification(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid1, editable=False)
-    report = models.ForeignKey(VoteReport, on_delete=models.PROTECT, related_name="verifications")
+    report = models.ForeignKey(VoteReport, on_delete=models.CASCADE, related_name="verifications")
     source_ip = models.GenericIPAddressField()
     result = models.BooleanField()
     date = models.DateTimeField(auto_now_add=True)
