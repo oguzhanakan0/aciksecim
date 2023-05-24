@@ -35,7 +35,7 @@ class CreateVoteReportForm(forms.ModelForm):
     n_rte = forms.IntegerField(label="Tayyip Erdoğan Oy Sayısı", widget=forms.NumberInput(attrs={'placeholder': 123}))
     file = forms.FileField(
         label="Tutanak dosyası", 
-        help_text="Kabul edilen dosya uzantıları: PNG, JPG, JPEG, PDF",
+        help_text="Kabul edilen dosya uzantıları: PNG, JPG, JPEG, PDF. Maksimum dosya boyutu: 2.5 Megabayt",
     )
     captcha = CaptchaField(error_messages={"invalid":"CAPTCHA kodunu hatalı girdiniz."}, help_text="Kodu yenilemek için kod görseline tıklayın.")
 

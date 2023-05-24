@@ -2,6 +2,7 @@ import uuid
 from django.db import models
 from django.utils.text import slugify 
 from django.core.exceptions import ValidationError
+import os
 
 # Validators
 
@@ -72,6 +73,12 @@ class Box(models.Model):
         ]
 
 class VoteReport(models.Model):
+    
+    def get_file_path(self, filename):
+        ext = filename.split('.')[-1]
+        filename = f"{uuid.uuid4()}.{ext}"
+        return os.path.join('reports', filename)
+
     id = models.UUIDField(primary_key=True,default=uuid.uuid1, editable=False)
     box = models.ForeignKey(Box, on_delete=models.CASCADE, related_name="reports")
     version = models.IntegerField(default=1)
@@ -79,7 +86,7 @@ class VoteReport(models.Model):
     n_invalid = models.IntegerField()
     n_kk = models.IntegerField()
     n_rte = models.IntegerField()
-    file = models.FileField(upload_to='reports', validators=[validate_file_extension, validate_file_size])
+    file = models.FileField(upload_to=get_file_path, validators=[validate_file_extension, validate_file_size])
     date = models.DateTimeField(auto_now_add=True)
     source_ip = models.GenericIPAddressField()
 

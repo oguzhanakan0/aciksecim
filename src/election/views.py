@@ -1,7 +1,8 @@
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
-from django_tables2 import RequestConfig
+from django_tables2 import RequestConfig, LazyPaginator
 from election.forms import (CreateBoxForm, CreateVoteReportForm, DownloadAllReportsForm, GetBoxForm,
                             GetCityForm, GetDistrictForm,
                             ReadonlyVoteReportForm, VerifyVoteReportForm)
@@ -40,7 +41,7 @@ def search_box(request, city, district):
         if form.is_valid():
             return redirect(get_or_create_box, city=city, district=district, box_number=form.cleaned_data["box_number"])
         else:
-            print(form.errors)
+            return render(request, "election/422.html", {"form": form})
     else:
         form = GetBoxForm(initial={"district":district})
     _city = City.objects.get(slug=city)
@@ -50,7 +51,6 @@ def search_box(request, city, district):
 def get_or_create_box(request, city, district, box_number):
     not_found = False
     if request.method == "POST":
-        print(request.POST)
         form = CreateBoxForm(request.POST)
         if form.is_valid():
             box = form.save()
@@ -64,14 +64,16 @@ def get_or_create_box(request, city, district, box_number):
         not_found = True
     box_form = CreateBoxForm(instance=box)
     vote_report_form = CreateVoteReportForm(instance=VoteReport(box=box,source_ip=get_client_ip(request)))
-
+    table = VoteReportTable(box.reports.all()) if box.id else None # type: ignore
+    if table:
+        RequestConfig(request, paginate={"per_page": 10, "paginator_class": LazyPaginator}).configure(table) # type: ignore
     return render(
         request, 
         "election/box.html", 
         {
             "not_found":not_found, 
             "box_form":box_form, 
-            "vote_report_table": VoteReportTable(box.reports.all()) if box.id else None, # type: ignore
+            "vote_report_table": table,
             "n_vote_report": box.reports.all().count() if box.id else 0, # type: ignore
             "vote_report_form": vote_report_form,
             "box":box
@@ -97,6 +99,7 @@ def create_vote_report(request):
 def get_all_boxes(request, city, district):
     _district = District.objects.get(city__slug=city,slug=district)
     table = BoxTable(Box.objects.filter(district=_district).order_by('number'), empty_text="Bu ilçeye ait bir sandık bulunamadı. Lütfen önceki sayfaya dönüp sandık numarası girerek yeni bir sandık yaratın.") # type: ignore
+    RequestConfig(request, paginate={"per_page": 10, "paginator_class": LazyPaginator}).configure(table) # type: ignore
     return render(
         request, 
         "election/boxes.html", 
@@ -109,6 +112,7 @@ def get_all_boxes(request, city, district):
 def get_all_reports(request, city, district):
     _district = District.objects.get(city__slug=city,slug=district)
     table = VoteReportTableWide(VoteReport.objects.filter(box__district=_district).order_by('date'), empty_text="Bu ilçeye ait bir tutanak bulunamadı.") # type: ignore
+    RequestConfig(request, paginate={"per_page": 10, "paginator_class": LazyPaginator}).configure(table) # type: ignore
     return render(
         request, 
         "election/reports.html", 
@@ -135,6 +139,7 @@ def get_vote_report(request, pk):
         "election/vote_report.html", 
         {
             "report": report,
+            "env": "test" if settings.DEBUG else "prod",
             "vote_report_form": vote_report_form,
             "verify_vote_report_form": verify_vote_report_form,
         }
@@ -143,9 +148,7 @@ def get_vote_report(request, pk):
 def verify_vote_report(request):
     if request.method == "POST":
         form = VerifyVoteReportForm(request.POST)
-        print(form.instance.__dict__)
         if form.is_valid():
-            print("form is valid")
             form.save()
             return redirect(get_or_create_box, form.instance.report.box.district.city.slug, form.instance.report.box.district.slug, form.instance.report.box.number)
         else:
@@ -159,7 +162,7 @@ def get_sss(request):
 def get_stats(request):
     table = StatisticsTable(City.objects.all()) # type: ignore
     form = DownloadAllReportsForm()
-    RequestConfig(request, paginate={"per_page": 100}).configure(table)
+    RequestConfig(request, paginate={"per_page": 100, "paginator_class": LazyPaginator}).configure(table) # type: ignore
     return render(request, "election/stats.html", {"table":table, "form":form})
 
 def get_all_reports_json(request):

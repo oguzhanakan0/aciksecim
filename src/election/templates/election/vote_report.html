@@ -20,11 +20,10 @@
         </div>
         <div class="col-xs-12 col-lg-8 d-flex flex-column p-2">
             <h6>Tutanak Kontrolü</h6>
-            <a href={{ vote_report_form.instance.file.url }} role="button" class="btn btn-primary">Tutanağı göster</a>
+            <a href="https://storage.googleapis.com/vote-reports-{{ env }}/{{ report.file.name }}" target="_blank" role="button" class="btn btn-primary">Tutanağı göster ({{ report.file.size|filesizeformat }})</a>
             <br>
             <form action="/actions/verify-vote-report/" method="post">
                 {% csrf_token %}
-                {% comment %} <input name="report_id" type="number" value={{ vote_report_form.instance.pk }} hidden> {% endcomment %}
                 {% bootstrap_form verify_vote_report_form %}
                 <input type="submit" class="btn btn-success" value="Kontrolü Tamamla">
             </form>

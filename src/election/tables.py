@@ -43,6 +43,7 @@ class BoxTable(tables.Table):
         model = Box
         orderable = False
         fields = ("number", )
+        template_name = 'django_tables2/bootstrap5.html'
 
 class StatisticsTable(tables.Table):
     id = tables.Column(verbose_name= 'İl Kodu')
@@ -63,3 +64,4 @@ class StatisticsTable(tables.Table):
         model = City
         orderable = True
         fields = ("id", "name", "n_box", "n_voter" )
+        template_name = 'django_tables2/bootstrap5.html'

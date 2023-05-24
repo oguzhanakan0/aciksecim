@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dotenv
 
+dotenv.load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,13 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-q2h=oz)g+*e!pkwmz0hz^t%_ftrfzo+^(m9_x9r=tk%20qui3m'
+SECRET_KEY = os.getenv("DJANGO_SECRET")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False if os.getenv("DJANGO_ENV") == "prod" else True
 
 ALLOWED_HOSTS = ["*"]
-
 
 # Application definition
 
@@ -79,12 +81,22 @@ WSGI_APPLICATION = 'src.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # },
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASS"),
+        'HOST': os.getenv("DB_HOST"),
+        'PORT': os.getenv("DB_PORT"),
+        'OPTIONS': {
+            'connect_timeout': 3,
+        }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -116,6 +128,8 @@ USE_I18N = True
 
 USE_TZ = True
 
+CSRF_TRUSTED_ORIGINS = ["https://*.a.run.app", "https://acik-secim.com"]
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -136,3 +150,10 @@ DJANGO_TABLES2_TABLE_ATTRS = {
         'class': 'table-light',
     },
 }
+
+STORAGES = {
+    "default": {"BACKEND": "storages.backends.gcloud.GoogleCloudStorage"},
+    'staticfiles': {"BACKEND": "storages.backends.gcloud.GoogleCloudStorage"},
+}
+
+GS_BUCKET_NAME = 'vote-reports-test' if DEBUG else 'vote-reports-prod'
