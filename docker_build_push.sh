@@ -1,5 +1,5 @@
 #!/bin/bash
 timestamp=$(date +%s)
-image="location:${timestamp}"
-docker build --platform linux/amd64 -t ${image} .
+image="europe-west1-docker.pkg.dev/data-rookery-387723/aciksecim-gar/aciksecim:${timestamp}"
+docker build -t ${image} .
 docker push ${image}

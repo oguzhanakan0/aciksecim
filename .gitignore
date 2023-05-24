@@ -4,8 +4,13 @@ __pycache__/
 *$py.class
 .vscode
 */reports
+*key.json
+*cloud-sql-proxy
 # C extensions
 *.so
+docker_build_push.sh
+*docker-compose.yaml
+
 
 # Distribution / packaging
 .Python
